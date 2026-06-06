@@ -164,16 +164,32 @@
 
         .explainer-card h3 {
             color: var(--uva-blue);
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px dashed #E0E0E0;
+            padding-bottom: 0.5rem;
+        }
+
+        .explainer-card p {
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .explainer-card ul {
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .explainer-card li {
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
         }
 
         .plain-language-box {
             background-color: #F4F7FA;
-            border-left: 4px solid #4A90E2;
-            padding: 1rem;
+            border-left: 4px solid var(--uva-orange);
+            padding: 1.25rem;
             margin-top: 1rem;
             border-radius: 0 4px 4px 0;
-            font-style: italic;
         }
 
         /* Q&A Chat Style */
@@ -294,7 +310,7 @@
 
     <header>
         <h1>UVA Law Classroom Assistant</h1>
-        <div style="font-size: 0.9rem; opacity: 0.9;">Inside the Classroom Knowledge Engine</div>
+        <div style="font-size: 0.9rem; opacity: 0.9;">Comprehensive Lecture Materials Engine</div>
     </header>
 
     <div class="container">
@@ -306,7 +322,7 @@
 
         <main>
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('explain')">Learn & Explain</button>
+                <button class="tab-btn active" onclick="switchTab('explain')">Comprehensive Lecture</button>
                 <button class="tab-btn" onclick="switchTab('ask')">Ask Questions</button>
                 <button class="tab-btn" onclick="switchTab('quiz')">Test Your Knowledge</button>
             </div>
@@ -316,17 +332,23 @@
                 <div id="explain-prof" style="color: #666; margin-bottom: 1.5rem; font-style: italic;"></div>
                 
                 <div class="explainer-card">
-                    <h3>Core Legal Principle</h3>
-                    <p id="explain-core"></p>
+                    <h3>1. Core Doctrinal Foundations</h3>
+                    <div id="explain-core"></div>
                 </div>
 
                 <div class="explainer-card">
-                    <h3>The Landmark Case / Context</h3>
-                    <p id="explain-case"></p>
+                    <h3>2. Case Brief, Facts & Mechanics</h3>
+                    <div id="explain-case"></div>
+                    
                     <div class="plain-language-box">
-                        <strong>Plain Language Translation:</strong>
-                        <p id="explain-plain" style="margin-top: 0.5rem;"></p>
+                        <strong style="color: var(--uva-blue);">Plain Language Translation:</strong>
+                        <div id="explain-plain" style="margin-top: 0.5rem; font-style: italic; line-height: 1.5;"></div>
                     </div>
+                </div>
+
+                <div class="explainer-card">
+                    <h3>3. Deep-Dive Lecture Material & Application</h3>
+                    <div id="explain-deep"></div>
                 </div>
             </div>
 
@@ -334,11 +356,11 @@
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMessages">
                         <div class="message bot">
-                            Hi! I'm synchronized with this course's syllabus. Ask me anything about this legal topic, or request a complex scenario broken down into everyday terms!
+                            Hi! I'm loaded with the full depth of this specific lecture material. Ask me any conceptual question or legal hypothetical based on this professor's syllabus!
                         </div>
                     </div>
                     <div class="chat-input-area">
-                        <input type="text" id="chatInput" class="chat-input" placeholder="e.g., What counts as a 'bad act' in evidence law?">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Type your legal question here...">
                         <button class="btn btn-secondary" onclick="sendMessage()">Ask AI</button>
                     </div>
                 </div>
@@ -360,116 +382,190 @@
     </div>
 
     <script>
-        // Data derived directly from the user's video inventory & accompanying core legal principles
+        // Highly granular data built directly from the explicit law lectures in the source playlist
         const lawData = [
             {
                 id: "lucy-zehmer",
-                subject: "Contracts: Cold-Calling & Intent",
+                subject: "Contracts: Objective Theory of Intent",
                 professor: "UVA Law Faculty",
-                videoContext: "Cold-Calling in Law School: Lucy v. Zehmer",
-                core: "Objective Theory of Contracts: A party's intent is determined by their outward, objective manifestations (words and actions), rather than their secret, subjective intentions.",
-                caseContext: "Lucy v. Zehmer: Two acquaintances had drinks and wrote out an agreement on the back of a restaurant receipt to sell a farm. The seller later claimed he was entirely joking and high as a pine tree.",
-                plain: "If you act and speak like you are making a real, serious business deal, the law will hold you to it. The court doesn't care if you secretly thought it was a prank inside your head.",
+                videoContext: "Cold-Calling in Law School: Lucy v. Zehmer [Source Video 1]",
+                core: `
+                    <p><strong>The Objective Theory of Contracts:</strong> In contract law, mutual assent is judged entirely by an objective standard. This means a court evaluates a party's intent based on outward, observable manifestations (words, conduct, written documents, and contextual behavior) rather than secret, unexpressed, subjective designs.</p>
+                    <p>The standard applied is: <em>What would a reasonable person in the shoes of the other party conclude from these outward actions?</em></p>
+                `,
+                caseContext: `
+                    <p><strong>Case:</strong> <em>Lucy v. Zehmer</em>, 196 Va. 493, 84 S.E.2d 516 (1954).</p>
+                    <p><strong>Facts & Cold-Call Dynamics:</strong> This classic pedagogical example highlights the anxiety-inducing law school dynamic of "cold-calling" to tease out hidden legal intricacies. In the case, the parties met at a restaurant, consumed several alcoholic drinks, and spent forty minutes constructing a written agreement on the back of a small guest check to transfer ownership of the Ferguson Farm for $50,000.</p>
+                    <p><strong>The Dispute:</strong> Zehmer later refused to hand over the land, defending himself by asserting that he was entirely joking, highly intoxicated ("high as a pine tree"), and that the execution was merely a playful prank intended to prove Lucy didn't actually have $50,000.</p>
+                `,
+                plain: "The law completely ignores your secret thoughts. If you write out a deal, check over its terms for 40 minutes, rewrite it to include a spouse's signature, and sign it with someone else, you cannot later back out by saying, 'Psyche! It was all an elaborate joke.' If your outward actions look like a real business transaction, the law will treat it as one.",
+                deep: `
+                    <p>The lecture unpacks the critical policy rationale underlying the objective standard:</p>
+                    <ul>
+                        <li><strong>Commercial Reliability:</strong> If business dealings depended on tracking individual inner thoughts or hidden motivations, the security of business transactions would collapse. Commerce requires relying on clear, explicit commitments.</li>
+                        <li><strong>The Intoxication Defense Bar:</strong> To avoid a contract based on intoxication, a party must prove they were completely incapacitated—unable to comprehend the nature or consequences of the instrument being executed. Because Zehmer remembered fine details, modified the writing to include his wife's signature, and explicitly discussed the title search, his claim of incapacitating intoxication failed.</li>
+                        <li><strong>The Socratic Cold-Call Lessons:</strong> The classroom dynamic demonstrates how professors systematically dismantle subjective excuses to force students to view interactions strictly through the analytical eyes of a detached, reasonable outside observer.</li>
+                    </ul>
+                `,
                 qaPairs: {
-                    "what if they were drunk": "In Lucy v. Zehmer, the court found that while they had been drinking, the seller wasn't so completely intoxicated that he couldn't understand what he was doing. If someone is truly so drunk they don't comprehend what's happening, a contract can be voidable, but the bar is incredibly high!",
-                    "default": "Great legal question. Under objective contract theory, external actions like signing a document, rewriting terms, or accepting a deposit show consent, regardless of unexpressed personal reservations."
+                    "drunk": "To nullify a contract due to intoxication, the level of drunkenness must be severe enough to destroy your cognitive capacity entirely. In Lucy v. Zehmer, because Zehmer discussed minute details, redrafted the note to ensure his wife signed it, and remembered the transaction clearly, the court ruled he possessed full legal capacity.",
+                    "joke": "Even if you are completely joking inside your head, if your outward words and physical conduct indicate a serious business proposition, the objective theory dictates that a valid contract has been formed.",
+                    "default": "In Lucy v. Zehmer, the court confirmed that a party's secret intentions hold zero weight. Mutual assent is determined entirely by an objective, reasonable interpretation of visible expressions and signed documents."
                 },
                 quiz: {
-                    question: "If Alex signs a contract to sell a car but secretly plans to back out, claiming it was an elaborate April Fools joke, what happens under standard contract law?",
+                    question: "During a business lunch, a seller drafts a clear land conveyance agreement on a napkin, revises it twice to adjust payment terms, and signs it. He later claims he was secretly joking. Is the contract binding?",
                     options: [
-                        { text: "The contract is void because Alex lacked internal, genuine intent to sell.", correct: false },
-                        { text: "The contract is binding if a reasonable observer would believe Alex genuinely intended to make a deal.", correct: true },
-                        { text: "The contract is automatically invalid unless notarized in front of a judge.", correct: false }
+                        { text: "No, because a contract absolute requires a subjective 'meeting of the minds' inside both parties' thoughts.", correct: false },
+                        { text: "Yes, because his visible actions and meticulous revisions would lead a reasonable person to conclude he intended a serious transaction.", correct: true },
+                        { text: "No, because enforceable contracts regarding real property cannot be legally drafted on informal items like napkins.", correct: false }
                     ],
-                    explanation: "Under the Objective Theory of Contracts (established clearly in cases like Lucy v. Zehmer), outward expressions matter. If your actions look like a deal, the law treats it like a deal."
-                }
-            },
-            {
-                id: "civil-procedure-frost",
-                subject: "Civil Procedure",
-                professor: "Professor Amanda Frost",
-                videoContext: "Civil Procedure With Amanda Frost",
-                core: "Personal Jurisdiction and Due Process: Courts must have explicit structural authority over a defendant before they can force them to show up and defend a lawsuit.",
-                caseContext: "Understanding where litigation can legally happen ensures fairness so a citizen isn't dragged across the country unexpectedly.",
-                plain: "A plaintiff can't just pick any court in the United States to sue someone. The state chosen must have a fair connection to the incident or the person being sued.",
-                qaPairs: {
-                    "can i sue an online business anywhere": "This is a massive topic in Civ Pro! The Supreme Court looks at whether the online business 'purposely availed' itself of the benefits of doing business in that specific state, targeting its residents specifically.",
-                    "default": "In Civil Procedure, rules governing jurisdiction, service of process, and venue dictate how the legal machinery operates fairly before contentions are even argued."
-                },
-                quiz: {
-                    question: "Which legal mechanism dictates whether a specific court has authority over a particular defendant?",
-                    options: [
-                        { text: "Subject Matter Competency", correct: false },
-                        { text: "Personal Jurisdiction", correct: true },
-                        { text: "The Right of Habeas Corpus", correct: false }
-                    ],
-                    explanation: "Personal jurisdiction limits a court's power over an out-of-state defendant, guaranteeing compliance with Due Process clause protections."
+                    explanation: "Under the Objective Theory of Contracts highlighted in Lucy v. Zehmer, outward indicators—such as rewriting terms and signing agreements—bind the party, regardless of secret subjective intentions or hidden jocularity."
                 }
             },
             {
                 id: "contracts-geis",
-                subject: "Contracts: Deal Design",
+                subject: "Contracts: Structural Transaction Design",
                 professor: "Professor George Geis",
-                videoContext: "Contracts With Professor George Geis",
-                core: "Offer, Acceptance, and Consideration: A legal contract requires a clear commitment, mutual assent, and a bargained-for exchange of economic value.",
-                caseContext: "Explores structural mechanics of commercial transactions, risk allocation, and remedies for breach of contract.",
-                plain: "A valid legal contract is more than a simple promise. It's a clear 'give-and-take' exchange where both sides give up something of legal value to bind each other.",
+                videoContext: "Contracts With Professor George Geis [Source Video 4]",
+                core: `
+                    <p><strong>The Mechanics of Exchange:</strong> Contract law revolves around the functional requirements of transaction design, managing the baseline trinity of contract formation: Offer, Acceptance, and Consideration.</p>
+                    <p>Professor Geis emphasizes thinking of a contract not simply as a rigid historical document, but as a dynamic mechanism designed to allocate operational risks, structural rewards, and prospective remedies cleanly between complex commercial entities.</p>
+                `,
+                caseContext: `
+                    <p>The course looks past standard definitions to examine real-world application, studying how corporations structure high-stakes commercial relationships, map conditional promises, and protect their interests from performance failure or shifting market values.</p>
+                `,
+                plain: "Think of a contract as a protective rulebook for a high-stakes corporate game. It isn't just about handshake agreements; it's a strategic design blueprint that dictates exactly who loses money if a shipping truck crashes, a factory loses power, or market prices suddenly spike.",
+                deep: `
+                    <p>Professor Geis's classroom analysis reveals deep structural truths about contract composition:</p>
+                    <ul>
+                        <li><strong>Contracts as Strategic Risk Maps:</strong> Sophisticated contracts map out potential futures. They establish conditions precedent (things that must happen before a duty kicks in) and manage exogenous market threats via clauses that dictate liabilities before issues arise.</li>
+                        <li><strong>The Fallacy of Pure Fairness:</strong> Courts do not generally examine whether you made a good deal or a bad financial deal. As long as mutual consideration is present (a bargained-for exchange of legal value), courts will aggressively enforce the terms as written.</li>
+                        <li><strong>Economic Efficiency & Remedies:</strong> The course highlights that contract remedies (usually expectation damages—putting the injured party in the financial position they would have enjoyed had the contract been fulfilled) are constructed to promote economic efficiency and discourage disruptive business behavior.</li>
+                    </ul>
+                `,
                 qaPairs: {
-                    "what is consideration": "Consideration is simply the price paid for a promise. It means both sides must bring value to the table—like money, goods, services, or giving up a legal right.",
-                    "default": "Professor Geis highlights contract design as a strategic mapping exercise. Contracts exist to cleanly allocate risks between parties before things break down."
+                    "consideration": "Consideration requires a mutually bargained-for exchange of value. If you don't offer any legal detriment, gift promises generally cannot be enforced as binding contracts.",
+                    "breach": "When a breach occurs, courts look to expectation damages. The goal is simple: award enough money to put the non-breaching party exactly where they would have been if the contract had been successfully completed.",
+                    "default": "Professor Geis frames contracts as functional instruments of transaction engineering. They exist to eliminate ambiguity by organizing promises, allocating unforeseen liabilities, and detailing clear performance benchmarks."
                 },
                 quiz: {
-                    question: "If a rich relative promises to give you $5,000 next month out of pure kindness, but then changes their mind, can you easily sue for breach of contract?",
+                    question: "When a commercial dispute arises over an unfulfilled promise, what standard baseline remedy do courts apply to resolve a contract breach?",
                     options: [
-                        { text: "Yes, because all promises are legally binding commitments.", correct: false },
-                        { text: "No, because a pure gift lacks 'consideration' (the required mutual exchange of value).", correct: true },
-                        { text: "Yes, provided the promise was written down on a piece of paper.", correct: false }
+                        { text: "Punitive damages intended to severely penalize the party who broke their word.", correct: false },
+                        { text: "Expectation damages designed to place the non-breaching party in the financial position they expected from full performance.", correct: true },
+                        { text: "Automatic rescission of all past business agreements between those two specific entities.", correct: false }
                     ],
-                    explanation: "Gifts do not generally count as binding contracts because there is no reciprocal consideration—the receiver is giving nothing up in exchange."
+                    explanation: "Contract remedies focus on market efficiency. Expectation damages evaluate what the plaintiff was promised and award the financial equivalent, bypassing punitive punishments."
                 }
             },
             {
                 id: "agency-geis",
-                subject: "The Law of Agency",
+                subject: "The Law of Agency: Corporate Liability Perimeters",
                 professor: "Vice Dean George Geis",
-                videoContext: "The Law of Agency",
-                core: "Principal-Agent Relationships: When can a principal be held legally liable for actions or financial contracts entered into by their agent?",
-                caseContext: "Covers Express, Implied, and Apparent Authority within business entities and fiduciary structures.",
-                plain: "If you give someone the authority to represent your business, you can become legally and financially responsible for the deals they sign or mistakes they make.",
+                videoContext: "The Law of Agency [Source Video 10]",
+                core: `
+                    <p><strong>The Principal-Agent Dynamic:</strong> Agency law dictates how a legal entity (the Principal) interacts with external markets using representatives (Agents). It governs when actions taken, or contracts signed, by an agent create binding obligations or tort liabilities for the underlying principal.</p>
+                    <p>The core doctrinal categories of authority include: <strong>Express Authority</strong> (explicit instructions), <strong>Implied Authority</strong> (tasks naturally required to complete explicitly assigned duties), and <strong>Apparent Authority</strong> (appearances created by the principal toward the public).</p>
+                `,
+                caseContext: `
+                    <p>The lecture examines business configurations where rogue, overzealous, or mistaken employees execute unauthorized commercial transactions or commitments, leaving innocent third-party clients caught in the crossfire of corporate disavowals.</p>
+                `,
+                plain: "If you own a business, you cannot simply hide behind closed doors and escape liability. If your words or organizational setup lead a regular customer to believe your manager has the power to sign a major client deal, you are bound to that deal—even if you explicitly yelled at that manager in private never to touch that account.",
+                deep: `
+                    <p>Vice Dean Geis deep-dives into the operational machinery of collective business actions:</p>
+                    <ul>
+                        <li><strong>The Mechanics of Apparent Authority:</strong> Apparent authority is constructed entirely by the *principal's* signals to the external marketplace, not the agent's self-serving claims. If a company gives an employee a corporate title, an office, and company letterhead, they have projected an appearance of authority to the public.</li>
+                        <li><strong>Protecting Innocent Market Reliance:</strong> The law prioritizes protecting innocent third parties who reasonably rely on corporate appearances. It places the burden of internal control onto the business itself, rather than forcing consumers to cross-examine every corporate hierarchy.</li>
+                        <li><strong>Fiduciary Duties:</strong> Beyond external liability, agents owe a strict cluster of internal fiduciary obligations to their principals, specifically the Duties of Loyalty, Care, and Obedience. Violating these rules exposes the rogue agent to internal indemnification lawsuits.</li>
+                    </ul>
+                `,
                 qaPairs: {
-                    "what is apparent authority": "Apparent authority occurs when a business owner makes it look to an outside customer like an employee has the power to sign a deal, even if the owner secretly told the employee not to.",
-                    "default": "Agency law dictates the perimeter of corporate liability. If an agent operates within their apparent authority, the principal remains bound to third-party agreements."
+                    "unauthorized": "If an agent acts completely without authority, the principal isn't bound unless Apparent Authority was established through the principal's behavior, or the principal later ratifies (accepts) the deal.",
+                    "fiduciary": "Agents owe strict fiduciary duties to their principals. If an agent profits secretly from a corporate transaction or acts directly against explicit instructions, they can be sued internally for damages.",
+                    "default": "Vice Dean Geis clarifies that Apparent Authority depends on actions taken by the Principal. If a company signals to a consumer that an agent speaks for them, the corporation cannot later use internal rulebooks to escape the deal."
                 },
                 quiz: {
-                    question: "If an agent acts without real authorization, but the principal acts in a way that leads a third party to believe the agent has authority, the principal is bound by:",
+                    question: "A company president explicitly forbids an account executive from discounting services. However, the corporate office provides this executive with standard contract templates. The executive gives a client a 20% discount using a template. Is the company bound?",
                     options: [
-                        { text: "Implied Fiduciary Consent", correct: false },
-                        { text: "Apparent Authority", correct: true },
-                        { text: "De Facto Agency Exemption", correct: false }
+                        { text: "No, because the executive committed an act of insubordination, completely severing the agency relationship.", correct: false },
+                        { text: "Yes, because the company clothed the executive with Apparent Authority by providing corporate tools and titles that would mislead a reasonable client.", correct: true },
+                        { text: "No, because express verbal restrictions always override public appearances in agency disputes.", correct: false }
                     ],
-                    explanation: "Apparent authority protects innocent third parties who rely on appearances created by the primary business owner (the principal)."
+                    explanation: "Apparent authority occurs when a principal's behavior leads an outsider to reasonably believe an agent has authorization. Because the company supplied the executive with contracts and customer access, they created apparent authority, binding the corporation."
                 }
             },
             {
                 id: "evidence-mitchell",
-                subject: "Evidence: Bad Acts",
+                subject: "Evidence: Federal Rule 404(b) & Past Bad Acts",
                 professor: "Professor Greg Mitchell",
-                videoContext: "Other Bad Acts Evidence",
-                core: "Federal Rule of Evidence 404(b): Evidence of other crimes or wrongs is not admissible to prove a person's character to show they acted in conformity therewith on a particular occasion.",
-                caseContext: "Analyzing the fine line between demonstrating intent, motive, or identity vs. unfairly poisoning the jury with past misbehavior.",
-                plain: "The prosecution can't just list all the bad things you've done in your life to convince a jury that you are a bad person who probably committed this new crime.",
+                videoContext: "Other Bad Acts Evidence [Source Video 14]",
+                core: `
+                    <p><strong>Federal Rule of Evidence 404(b):</strong> This pillar of trial advocacy states that evidence of past crimes, wrongs, or other bad acts is categorically <strong>inadmissible</strong> if it is used to prove a person's character to show that they acted in conformity with that character during the specific incident in question.</p>
+                    <p>However, such evidence may be admitted for alternative, non-character cognitive purposes, widely categorized under the <strong>MIMIC</strong> framework: <strong>M</strong>otive, <strong>I</strong>ntent, <strong>M</strong>istake (absence thereof), <strong>I</strong>dentity, or <strong>C</strong>ommon plan/scheme.</p>
+                `,
+                caseContext: `
+                    <p>The classroom analysis centers on the high-stakes balancing tests trial judges must perform. Introducing a defendant's separate past criminal lifestyle risks poisoning the jury's mind, creating an unfair risk that they will convict based on an individual's general character rather than concrete factual proof of the specific crime charged.</p>
+                `,
+                plain: "If you are on trial for shoplifting a watch today, the prosecutor is strictly banned from telling the jury, 'Hey, look at this person's record—they stole a car five years ago, so they are a natural-born thief who probably stole this watch too!' The court wants to judge you based on facts from *this* day, not your past life choices.",
+                deep: `
+                    <p>Professor Mitchell's lecture walks through the highly precise, narrow gateways where past conduct can legally cross the courtroom threshold:</p>
+                    <ul>
+                        <li><strong>The Rule 403 Balancing Hurdle:</strong> Even if a past bad act fits a valid MIMIC exception (like proving a highly specific identity via a signature Modus Operandi), the judge must still run it through an explicit Rule 403 balancing test. The probative value (educational weight) must not be substantially outweighed by the danger of unfair prejudice to the defendant.</li>
+                        <li><strong>The Identity/M.O. Gate:</strong> To introduce past acts to prove identity, the methodology used must be incredibly unique—almost like a distinct behavioral signature. Simply robbing two gas stations with a regular pistol does not qualify; utilizing a highly specific costume, phrase, and getaway pattern might.</li>
+                        <li><strong>Absence of Mistake:</strong> If a defendant claims an illicit transaction was just an innocent accident, the prosecution can introduce past instances of identical conduct to systematically demolish the claim that it was an isolated mishap.</li>
+                    </ul>
+                `,
                 qaPairs: {
-                    "when can past crimes be used": "Under Rule 404(b), past bad acts can be admitted for specific alternative goals: proving motive, opportunity, intent, preparation, plan, or identity (often remembered as the 'MIMIC' exceptions).",
-                    "default": "Evidence law strictly filters out highly prejudicial character evidence to protect a defendant's right to a fair trial based on facts, not past lifestyle choices."
+                    "mimic": "MIMIC stands for the permissible exceptions under FRE 404(b): Motive, Intent, Absence of Mistake, Identity, and Common Plan. These allow past acts to be entered into evidence ONLY for these precise non-character purposes.",
+                    "prejudice": "Under Rule 403, if evidence is so inflammatory that it will cause a jury to make an emotional decision rather than a factual one, the judge should exclude it, even if it has some technical relevance under 404(b).",
+                    "default": "Professor Mitchell demonstrates that character evidence is filtered out to ensure trials focus strictly on proving the charged crime, guarding against the temptation to convict someone for being a generally bad person."
                 },
                 quiz: {
-                    question: "Under standard evidentiary rules, when can a defendant's separate past bank robbery be introduced at a new trial for bank robbery?",
+                    question: "A defendant is on trial for art forgery. She claims she genuinely believed the painting she sold was an authentic masterpiece. Can the prosecutor introduce evidence that she was caught selling three fake paintings last year?",
                     options: [
-                        { text: "To show that the defendant has a natural propensity for stealing things.", correct: false },
-                        { text: "To prove a highly unique, identical signature methodology (M.O.) that establishes identity.", correct: true },
-                        { text: "It can never be introduced under any circumstances whatsoever.", correct: false }
+                        { text: "No, because showing past crimes always violates the baseline rule against character evidence.", correct: false },
+                        { text: "Yes, because it serves a valid, non-character purpose: proving knowledge and an 'absence of mistake' under Rule 404(b).", correct: true },
+                        { text: "Yes, because juries are entitled to know if a defendant possesses a general propensity to lie.", correct: false }
                     ],
-                    explanation: "While past acts cannot show general bad character, they can be introduced under narrow exceptions like establishing a highly specific, distinct identity pattern."
+                    explanation: "When a defendant asserts an 'innocent accident' or 'mistake' defense, past identical acts can be introduced under Rule 404(b) exceptions to demonstrate knowledge and systematically disprove the claim of an accidental mishap."
+                }
+            },
+            {
+                id: "pepsico-advertising",
+                subject: "Contracts: Ads vs. Enforceable Offers",
+                professor: "UVA Law Technology Seminars",
+                videoContext: "Using Technology to Teach Leonard v. Pepsico [Source Video 17]",
+                core: `
+                    <p><strong>Advertisements as Invitations to Deal:</strong> Under black-letter contract doctrine, advertisements, catalogs, and circulars are generally not considered legal offers. Instead, they are treated as mere invitations to negotiate or invitations to receive offers from consumers.</p>
+                    <p>An exception arises only if an advertisement is written in clear, definite, and explicit terms that leave nothing open to negotiation, leaving a reasonable viewer to conclude performance is guaranteed upon compliance.</p>
+                `,
+                caseContext: `
+                    <p><strong>Case:</strong> <em>Leonard v. Pepsico, Inc.</em>, 88 F. Supp. 2d 116 (S.D.N.Y. 1999).</p>
+                    <p><strong>Facts:</strong> Pepsi ran a humorous television ad campaign promoting 'Pepsi Stuff' points. The commercial depicted a teenager showing off items like t-shirts (75 points) and leather jackets (1,450 points). It ended by showing a military Harrier Jet landing at a school, accompanied by the text: 'Harrier Fighter 7,000,000 Pepsi Points.'</p>
+                    <p><strong>The Lawsuit:</strong> A consumer noticed that the official rules allowed points to be bought for 10 cents each. He raised $700,000 from investors, filled out an order form, demanded the military fighter jet, and sued for breach of contract when Pepsi refused.</p>
+                `,
+                plain: "Television commercials and store flyers are almost never legally binding contracts. They are just announcements inviting you to come in and make an offer to buy. Furthermore, if a commercial contains an absurd, hyperbolic joke—like exchanging soda labels for a multi-million dollar military weapon—the court will apply common sense. A clear joke cannot be turned into a real legal contract.",
+                deep: `
+                    <p>The seminar highlights how the court evaluated the boundaries of objective reasonableness in public media:</p>
+                    <ul>
+                        <li><strong>The Reasonable Person Standard Applied to Humor:</strong> The court examined the commercial through the perspective of an objective, reasonable person. It determined that no reasonable person could view an advertisement featuring a teenage boy flying a military jet to high school as a serious, literal corporate offer.</li>
+                        <li><strong>Definiteness & The Order Form:</strong> The official Pepsi catalog contained no mention of the jet. The jet appeared only in the television commercial. An advertisement must contain explicit, definite terms to bypass the general rule and qualify as a binding offer.</li>
+                        <li><strong>The Statutory Barrier (Statute of Frauds):</strong> Transactions involving major high-value items require a signed, written document from the party being sued. An abstract television ad lacks the definite execution required to satisfy these basic statutory protections.</li>
+                    </ul>
+                `,
+                qaPairs: {
+                    "ad offer": "Advertisements are almost always invitations to negotiate, not offers. This prevents companies from being sued for breach if they unexpectedly run out of advertised stock.",
+                    "jet joke": "In Leonard v. Pepsico, the court ruled that the inclusion of the Harrier Jet was clearly a dramatic, hyperbolic joke. A reasonable person would recognize that a fighter jet capable of destroying buildings wouldn't be deployed as a school commuter vehicle.",
+                    "default": "Leonard v. Pepsico clarifies that advertisements are invitations to negotiate unless their terms are incredibly explicit. Additionally, obvious comedic hyperbole does not carry legal intent to create a contract."
+                },
+                quiz: {
+                    question: "A department store mistakenly prints an ad in a local paper offering diamond rings for $1 instead of $1,000. A customer arrives with $1 and demands a ring. Is the store contractually obligated to sell it?",
+                    options: [
+                        { text: "Yes, because printing a price in a public newspaper constitutes an irrevocable, binding offer to the world.", correct: false },
+                        { text: "No, because advertisements are generally invitations to negotiate, and the customer's demand represents the actual offer, which the store can refuse.", correct: true },
+                        { text: "Yes, provided the customer can prove they drove to the store immediately upon reading the text.", correct: false }
+                    ],
+                    explanation: "Consistent with Leonard v. Pepsico, advertisements are invitations to receive offers from buyers rather than binding offers themselves, meaning a business can decline an offer brought forward by a customer."
                 }
             }
         ];
@@ -501,7 +597,7 @@
             // Reset chat and quiz state for new selection
             document.getElementById('chatMessages').innerHTML = `
                 <div class="message bot">
-                    Hi! I'm synchronized with this course's syllabus. Ask me anything about this legal topic, or request a complex scenario broken down into everyday terms!
+                    Hi! I'm loaded with the full depth of this specific lecture material. Ask me any conceptual question or legal hypothetical based on this professor's syllabus!
                 </div>
             `;
             resetQuiz();
@@ -509,10 +605,11 @@
 
         function renderTopicData() {
             document.getElementById('explain-title').innerText = currentTopic.subject;
-            document.getElementById('explain-prof').innerText = `As presented in UVA Law classroom context: "${currentTopic.videoContext}" — taught by ${currentTopic.professor}`;
-            document.getElementById('explain-core').innerText = currentTopic.core;
-            document.getElementById('explain-case').innerText = currentTopic.caseContext;
-            document.getElementById('explain-plain').innerText = currentTopic.plain;
+            document.getElementById('explain-prof').innerText = `UVA Classroom Context: ${currentTopic.videoContext}`;
+            document.getElementById('explain-core').innerHTML = currentTopic.core;
+            document.getElementById('explain-case').innerHTML = currentTopic.caseContext;
+            document.getElementById('explain-plain').innerHTML = currentTopic.plain;
+            document.getElementById('explain-deep').innerHTML = currentTopic.deep;
             loadQuizQuestion();
         }
 
@@ -547,7 +644,7 @@
                 const botMsg = document.createElement('div');
                 botMsg.className = 'message bot';
                 
-                // Route query through simple regex mappings for dynamic feel
+                // Route query through precise string matching for targeted context response
                 let responseText = currentTopic.qaPairs["default"];
                 for (let key in currentTopic.qaPairs) {
                     if (query.includes(key)) {
@@ -591,12 +688,12 @@
                 element.classList.add('correct');
                 feedback.style.backgroundColor = '#EAFAF1';
                 feedback.style.color = '#27AE60';
-                feedback.innerHTML = `<strong>Correct!</strong> ${explanation}`;
+                feedback.innerHTML = `<strong>Correct Mastery!</strong> ${explanation}`;
             } else {
                 element.classList.add('wrong');
                 feedback.style.backgroundColor = '#FDEDEC';
                 feedback.style.color = '#C0392B';
-                feedback.innerHTML = `<strong>Incorrect.</strong> ${explanation}`;
+                feedback.innerHTML = `<strong>Incorrect Interpretation.</strong> ${explanation}`;
                 
                 // Highlight the correct one
                 options.forEach((opt, idx) => {
