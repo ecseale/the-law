@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVA Law Classroom Assistant</title>
+    <style>
+        :root {
+            --uva-orange: #E57200;
+            --uva-blue: #232D4B;
+            --light-bg: #F8F9FA;
+            --text-dark: #333333;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: var(--uva-blue);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--uva-orange);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Course Selector */
+        sidebar {
+            width: 320px;
+            background: white;
+            border-right: 1px solid #E0E0E0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            background: #F1F3F5;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+
+        .course-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .course-item {
+            padding: 1rem;
+            border-bottom: 1px solid #F0F0F0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .course-item:hover {
+            background-color: #F8F9FA;
+        }
+
+        .course-item.active {
+            border-left: 4px solid var(--uva-orange);
+            background-color: #EBF3FC;
+        }
+
+        .course-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            color: var(--uva-blue);
+        }
+
+        .course-professor {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Main Content Area */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #FFF;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            background: #F1F3F5;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: #E9ECEF;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--uva-blue);
+            border-bottom: 3px solid var(--uva-blue);
+        }
+
+        /* Tab Content Panes */
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Explainer View Style */
+        .explainer-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #E0E0E0;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .explainer-card h3 {
+            color: var(--uva-blue);
+            margin-bottom: 1rem;
+        }
+
+        .plain-language-box {
+            background-color: #F4F7FA;
+            border-left: 4px solid #4A90E2;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+        }
+
+        /* Q&A Chat Style */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #F8F9FA;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            background-color: var(--uva-blue);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background-color: white;
+            color: var(--text-dark);
+            border: 1px solid #E0E0E0;
+            align-self: flex-start;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #CCC;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--uva-orange);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #c46200;
+        }
+
+        .btn-secondary {
+            background-color: var(--uva-blue);
+        }
+        .btn-secondary:hover {
+            background-color: #161c30;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quiz-option {
+            display: block;
+            background: white;
+            border: 2px solid #E0E0E0;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--uva-blue);
+            background-color: #F8F9FA;
+        }
+
+        .quiz-option.correct {
+            border-color: #2ECC71;
+            background-color: #EAFAF1;
+        }
+
+        .quiz-option.wrong {
+            border-color: #E74C3C;
+            background-color: #FDEDEC;
+        }
+
+        .feedback-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>UVA Law Classroom Assistant</h1>
+        <div style="font-size: 0.9rem; opacity: 0.9;">Inside the Classroom Knowledge Engine</div>
+    </header>
+
+    <div class="container">
+        <sidebar>
+            <div class="sidebar-header">Select a Law Subject</div>
+            <ul class="course-list" id="courseList">
+                </ul>
+        </sidebar>
+
+        <main>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('explain')">Learn & Explain</button>
+                <button class="tab-btn" onclick="switchTab('ask')">Ask Questions</button>
+                <button class="tab-btn" onclick="switchTab('quiz')">Test Your Knowledge</button>
+            </div>
+
+            <div id="tab-explain" class="tab-content active">
+                <h2 id="explain-title" style="margin-bottom: 0.5rem; color: var(--uva-blue);"></h2>
+                <div id="explain-prof" style="color: #666; margin-bottom: 1.5rem; font-style: italic;"></div>
+                
+                <div class="explainer-card">
+                    <h3>Core Legal Principle</h3>
+                    <p id="explain-core"></p>
+                </div>
+
+                <div class="explainer-card">
+                    <h3>The Landmark Case / Context</h3>
+                    <p id="explain-case"></p>
+                    <div class="plain-language-box">
+                        <strong>Plain Language Translation:</strong>
+                        <p id="explain-plain" style="margin-top: 0.5rem;"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-ask" class="tab-content">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            Hi! I'm synchronized with this course's syllabus. Ask me anything about this legal topic, or request a complex scenario broken down into everyday terms!
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="e.g., What counts as a 'bad act' in evidence law?">
+                        <button class="btn btn-secondary" onclick="sendMessage()">Ask AI</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-quiz" class="tab-content">
+                <div class="quiz-container" id="quizContainer">
+                    <h2 style="margin-bottom: 1rem; color: var(--uva-blue);">Topic Mastery Challenge</h2>
+                    <div id="quiz-question" style="font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 500;"></div>
+                    
+                    <div id="quiz-options">
+                        </div>
+
+                    <div id="quiz-feedback" class="feedback-box"></div>
+                    <button id="next-quiz-btn" class="btn" style="margin-top: 1rem; display: none;" onclick="loadQuizQuestion()">Next Question</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Data derived directly from the user's video inventory & accompanying core legal principles
+        const lawData = [
+            {
+                id: "lucy-zehmer",
+                subject: "Contracts: Cold-Calling & Intent",
+                professor: "UVA Law Faculty",
+                videoContext: "Cold-Calling in Law School: Lucy v. Zehmer",
+                core: "Objective Theory of Contracts: A party's intent is determined by their outward, objective manifestations (words and actions), rather than their secret, subjective intentions.",
+                caseContext: "Lucy v. Zehmer: Two acquaintances had drinks and wrote out an agreement on the back of a restaurant receipt to sell a farm. The seller later claimed he was entirely joking and high as a pine tree.",
+                plain: "If you act and speak like you are making a real, serious business deal, the law will hold you to it. The court doesn't care if you secretly thought it was a prank inside your head.",
+                qaPairs: {
+                    "what if they were drunk": "In Lucy v. Zehmer, the court found that while they had been drinking, the seller wasn't so completely intoxicated that he couldn't understand what he was doing. If someone is truly so drunk they don't comprehend what's happening, a contract can be voidable, but the bar is incredibly high!",
+                    "default": "Great legal question. Under objective contract theory, external actions like signing a document, rewriting terms, or accepting a deposit show consent, regardless of unexpressed personal reservations."
+                },
+                quiz: {
+                    question: "If Alex signs a contract to sell a car but secretly plans to back out, claiming it was an elaborate April Fools joke, what happens under standard contract law?",
+                    options: [
+                        { text: "The contract is void because Alex lacked internal, genuine intent to sell.", correct: false },
+                        { text: "The contract is binding if a reasonable observer would believe Alex genuinely intended to make a deal.", correct: true },
+                        { text: "The contract is automatically invalid unless notarized in front of a judge.", correct: false }
+                    ],
+                    explanation: "Under the Objective Theory of Contracts (established clearly in cases like Lucy v. Zehmer), outward expressions matter. If your actions look like a deal, the law treats it like a deal."
+                }
+            },
+            {
+                id: "civil-procedure-frost",
+                subject: "Civil Procedure",
+                professor: "Professor Amanda Frost",
+                videoContext: "Civil Procedure With Amanda Frost",
+                core: "Personal Jurisdiction and Due Process: Courts must have explicit structural authority over a defendant before they can force them to show up and defend a lawsuit.",
+                caseContext: "Understanding where litigation can legally happen ensures fairness so a citizen isn't dragged across the country unexpectedly.",
+                plain: "A plaintiff can't just pick any court in the United States to sue someone. The state chosen must have a fair connection to the incident or the person being sued.",
+                qaPairs: {
+                    "can i sue an online business anywhere": "This is a massive topic in Civ Pro! The Supreme Court looks at whether the online business 'purposely availed' itself of the benefits of doing business in that specific state, targeting its residents specifically.",
+                    "default": "In Civil Procedure, rules governing jurisdiction, service of process, and venue dictate how the legal machinery operates fairly before contentions are even argued."
+                },
+                quiz: {
+                    question: "Which legal mechanism dictates whether a specific court has authority over a particular defendant?",
+                    options: [
+                        { text: "Subject Matter Competency", correct: false },
+                        { text: "Personal Jurisdiction", correct: true },
+                        { text: "The Right of Habeas Corpus", correct: false }
+                    ],
+                    explanation: "Personal jurisdiction limits a court's power over an out-of-state defendant, guaranteeing compliance with Due Process clause protections."
+                }
+            },
+            {
+                id: "contracts-geis",
+                subject: "Contracts: Deal Design",
+                professor: "Professor George Geis",
+                videoContext: "Contracts With Professor George Geis",
+                core: "Offer, Acceptance, and Consideration: A legal contract requires a clear commitment, mutual assent, and a bargained-for exchange of economic value.",
+                caseContext: "Explores structural mechanics of commercial transactions, risk allocation, and remedies for breach of contract.",
+                plain: "A valid legal contract is more than a simple promise. It's a clear 'give-and-take' exchange where both sides give up something of legal value to bind each other.",
+                qaPairs: {
+                    "what is consideration": "Consideration is simply the price paid for a promise. It means both sides must bring value to the table—like money, goods, services, or giving up a legal right.",
+                    "default": "Professor Geis highlights contract design as a strategic mapping exercise. Contracts exist to cleanly allocate risks between parties before things break down."
+                },
+                quiz: {
+                    question: "If a rich relative promises to give you $5,000 next month out of pure kindness, but then changes their mind, can you easily sue for breach of contract?",
+                    options: [
+                        { text: "Yes, because all promises are legally binding commitments.", correct: false },
+                        { text: "No, because a pure gift lacks 'consideration' (the required mutual exchange of value).", correct: true },
+                        { text: "Yes, provided the promise was written down on a piece of paper.", correct: false }
+                    ],
+                    explanation: "Gifts do not generally count as binding contracts because there is no reciprocal consideration—the receiver is giving nothing up in exchange."
+                }
+            },
+            {
+                id: "agency-geis",
+                subject: "The Law of Agency",
+                professor: "Vice Dean George Geis",
+                videoContext: "The Law of Agency",
+                core: "Principal-Agent Relationships: When can a principal be held legally liable for actions or financial contracts entered into by their agent?",
+                caseContext: "Covers Express, Implied, and Apparent Authority within business entities and fiduciary structures.",
+                plain: "If you give someone the authority to represent your business, you can become legally and financially responsible for the deals they sign or mistakes they make.",
+                qaPairs: {
+                    "what is apparent authority": "Apparent authority occurs when a business owner makes it look to an outside customer like an employee has the power to sign a deal, even if the owner secretly told the employee not to.",
+                    "default": "Agency law dictates the perimeter of corporate liability. If an agent operates within their apparent authority, the principal remains bound to third-party agreements."
+                },
+                quiz: {
+                    question: "If an agent acts without real authorization, but the principal acts in a way that leads a third party to believe the agent has authority, the principal is bound by:",
+                    options: [
+                        { text: "Implied Fiduciary Consent", correct: false },
+                        { text: "Apparent Authority", correct: true },
+                        { text: "De Facto Agency Exemption", correct: false }
+                    ],
+                    explanation: "Apparent authority protects innocent third parties who rely on appearances created by the primary business owner (the principal)."
+                }
+            },
+            {
+                id: "evidence-mitchell",
+                subject: "Evidence: Bad Acts",
+                professor: "Professor Greg Mitchell",
+                videoContext: "Other Bad Acts Evidence",
+                core: "Federal Rule of Evidence 404(b): Evidence of other crimes or wrongs is not admissible to prove a person's character to show they acted in conformity therewith on a particular occasion.",
+                caseContext: "Analyzing the fine line between demonstrating intent, motive, or identity vs. unfairly poisoning the jury with past misbehavior.",
+                plain: "The prosecution can't just list all the bad things you've done in your life to convince a jury that you are a bad person who probably committed this new crime.",
+                qaPairs: {
+                    "when can past crimes be used": "Under Rule 404(b), past bad acts can be admitted for specific alternative goals: proving motive, opportunity, intent, preparation, plan, or identity (often remembered as the 'MIMIC' exceptions).",
+                    "default": "Evidence law strictly filters out highly prejudicial character evidence to protect a defendant's right to a fair trial based on facts, not past lifestyle choices."
+                },
+                quiz: {
+                    question: "Under standard evidentiary rules, when can a defendant's separate past bank robbery be introduced at a new trial for bank robbery?",
+                    options: [
+                        { text: "To show that the defendant has a natural propensity for stealing things.", correct: false },
+                        { text: "To prove a highly unique, identical signature methodology (M.O.) that establishes identity.", correct: true },
+                        { text: "It can never be introduced under any circumstances whatsoever.", correct: false }
+                    ],
+                    explanation: "While past acts cannot show general bad character, they can be introduced under narrow exceptions like establishing a highly specific, distinct identity pattern."
+                }
+            }
+        ];
+
+        let currentTopic = lawData[0];
+
+        // Bootstrapping UI components
+        function init() {
+            const listEl = document.getElementById('courseList');
+            lawData.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = `course-item ${index === 0 ? 'active' : ''}`;
+                li.onclick = () => selectTopic(item.id, li);
+                li.innerHTML = `
+                    <div class="course-title">${item.subject}</div>
+                    <div class="course-professor">${item.professor}</div>
+                `;
+                listEl.appendChild(li);
+            });
+            renderTopicData();
+        }
+
+        function selectTopic(id, element) {
+            document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            currentTopic = lawData.find(item => item.id === id);
+            renderTopicData();
+            
+            // Reset chat and quiz state for new selection
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="message bot">
+                    Hi! I'm synchronized with this course's syllabus. Ask me anything about this legal topic, or request a complex scenario broken down into everyday terms!
+                </div>
+            `;
+            resetQuiz();
+        }
+
+        function renderTopicData() {
+            document.getElementById('explain-title').innerText = currentTopic.subject;
+            document.getElementById('explain-prof').innerText = `As presented in UVA Law classroom context: "${currentTopic.videoContext}" — taught by ${currentTopic.professor}`;
+            document.getElementById('explain-core').innerText = currentTopic.core;
+            document.getElementById('explain-case').innerText = currentTopic.caseContext;
+            document.getElementById('explain-plain').innerText = currentTopic.plain;
+            loadQuizQuestion();
+        }
+
+        // Navigation Controller
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Activate button clicked
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // Interactive Plain Language Chat System
+        function sendMessage() {
+            const inputEl = document.getElementById('chatInput');
+            const query = inputEl.value.trim().toLowerCase();
+            if (!query) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Add User Bubble
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerText = inputEl.value;
+            chatMessages.appendChild(userMsg);
+            
+            inputEl.value = '';
+
+            // Engine Response Logic
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                
+                // Route query through simple regex mappings for dynamic feel
+                let responseText = currentTopic.qaPairs["default"];
+                for (let key in currentTopic.qaPairs) {
+                    if (query.includes(key)) {
+                        responseText = currentTopic.qaPairs[key];
+                    }
+                }
+                
+                botMsg.innerText = responseText;
+                chatMessages.appendChild(botMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 400);
+        }
+
+        // Quiz Mechanics
+        function loadQuizQuestion() {
+            resetQuiz();
+            const quiz = currentTopic.quiz;
+            document.getElementById('quiz-question').innerText = quiz.question;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            quiz.options.forEach((opt) => {
+                const button = document.createElement('div');
+                button.className = 'quiz-option';
+                button.innerText = opt.text;
+                button.onclick = () => selectOption(button, opt.correct, quiz.explanation);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(element, isCorrect, explanation) {
+            // Prevent multiple submissions
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.style.display = 'block';
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.style.backgroundColor = '#EAFAF1';
+                feedback.style.color = '#27AE60';
+                feedback.innerHTML = `<strong>Correct!</strong> ${explanation}`;
+            } else {
+                element.classList.add('wrong');
+                feedback.style.backgroundColor = '#FDEDEC';
+                feedback.style.color = '#C0392B';
+                feedback.innerHTML = `<strong>Incorrect.</strong> ${explanation}`;
+                
+                // Highlight the correct one
+                options.forEach((opt, idx) => {
+                    if (currentTopic.quiz.options[idx].correct) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-feedback').style.display = 'none';
+            document.getElementById('quiz-feedback').innerHTML = '';
+        }
+
+        // Initialize App on start
+        window.onload = init;
+    </script>
+</body>
+</html>
